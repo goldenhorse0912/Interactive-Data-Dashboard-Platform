@@ -7,17 +7,25 @@ const prisma = new PrismaClient();
 
 export const register = async (req: Request, res: Response) => {
     const { email, password, username } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
     console.log("this is reqbody_______", email, password, username)
     try {
-        const existingUser = await prisma.user.findUnique({ where: { username } });
-        if (existingUser) return res.status(400).json({ error: 'User already exists' });
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await prisma.user.create({
-            data: { email, passwordHash: hashedPassword, username },
-        });
-
-        res.status(201).json({ message: 'User created', userId: user.id });
+        const totalUsers = await prisma.user.count();
+        if (totalUsers === 0) {
+            const user = await prisma.user.create({
+                data: { email, passwordHash: hashedPassword, username, role: "admin" },
+            });
+        }
+        else {
+            const existingUserByName = await prisma.user.findUnique({ where: { username } });
+            if (existingUserByName) return res.status(400).json({ error: 'Same username!' });
+            const existingUserByEmail = await prisma.user.findUnique({ where: { email } });
+            if (existingUserByEmail) return res.status(400).json({ error: 'Same Email!' });
+            const user = await prisma.user.create({
+                data: { email, passwordHash: hashedPassword, username },
+            });
+            res.status(201).json({ message: 'User created', userId: user.id });
+        }
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });

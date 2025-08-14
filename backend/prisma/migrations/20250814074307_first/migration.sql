@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
+    "username" TEXT NOT NULL DEFAULT 'admin',
     "email" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'user',
@@ -32,6 +33,9 @@ CREATE TABLE "public"."Visualization" (
 
     CONSTRAINT "Visualization_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "public"."User"("username");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");

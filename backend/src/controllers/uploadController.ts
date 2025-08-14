@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+//import { NextRequest, NextResponse } from "next/server";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
@@ -26,26 +26,26 @@ const upload = multer({ storage });
 // Convert multer to promise
 const runMiddleware = promisify(upload.single("file"));
 
-export const post = async (req: NextRequest) => {
-    try {
-        // @ts-ignore - Node-style req/res handling
-        await runMiddleware(req, {});
+// export const post = async (req: NextRequest) => {
+//     try {
+//         // @ts-ignore - Node-style req/res handling
+//         await runMiddleware(req, {});
 
-        // @ts-ignore - multer attaches file
-        const file = req.file;
+//         // @ts-ignore - multer attaches file
+//         const file = req.file;
 
-        return NextResponse.json({
-            message: "File uploaded successfully",
-            file,
-        });
-    } catch (err) {
-        console.error(err);
-        return NextResponse.json({ error: "File upload failed" }, { status: 500 });
-    }
-};
+//         return NextResponse.json({
+//             message: "File uploaded successfully",
+//             file,
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         return NextResponse.json({ error: "File upload failed" }, { status: 500 });
+//     }
+// };
 
-export const config = {
-    api: {
-        bodyParser: false, // Important for file uploads
-    },
-};
+// export const config = {
+//     api: {
+//         bodyParser: false, // Important for file uploads
+//     },
+// };
